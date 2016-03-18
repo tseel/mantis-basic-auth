@@ -3,8 +3,8 @@
 class BasicAuthPlugin extends MantisPlugin {
     function register() {
         $this->name        = 'BasicAuth Plugin';
-        $this->description = 'Looks for REMOTE_USER in SERVER environment and autologins user.';
-        $this->version     = '0.01';
+        $this->description = 'Looks for REMOTE_USER in SERVER environment and autologins user. The username can be modified using $g_sso_user_regex in config for handling Kerberos auth and stripping domain (e.g. /^(.*)@DOMAIN\.LOCAL$/i).';
+        $this->version     = '0.02';
         $this->requires    = array( 'MantisCore' => '1.2.0' );
         $this->author      = 'David Schmidt';
         $this->contact     = 'david.schmidt -at- univie.ac.at';
@@ -25,9 +25,20 @@ class BasicAuthPlugin extends MantisPlugin {
             trigger_error( "Invalid login method. ($t_login_method)", ERROR );
         }
 
-        $t_user_id = user_get_id_by_name($_SERVER['REMOTE_USER']);
+	$t_sso_regex = config_get( 'sso_user_regex' );
+	if ( $t_sso_regex ) {
+		preg_match($t_sso_regex, $_SERVER['REMOTE_USER'], $user_match);
+ 		$t_username = $user_match[1];
+	}
+	else
+	{
+		$t_username = $_SERVER['REMOTE_USER'];
+	}
+
+	$t_user_id = user_get_id_by_name($t_username);
+	
         if ( !$t_user_id ) {
-            trigger_error( 'Invalid user.', ERROR );
+            trigger_error( 'Invalid user. (' . $t_username . ')', ERROR );
         }
 
         user_increment_login_count( $t_user_id );
