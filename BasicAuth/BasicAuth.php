@@ -16,7 +16,7 @@ class BasicAuthPlugin extends MantisPlugin {
     }
 
     function autologin() {
-        if (auth_is_user_authenticated()) {
+        if (auth_is_user_authenticated()  || (php_sapi_name() == "cli")) {
             return;
         }
 
