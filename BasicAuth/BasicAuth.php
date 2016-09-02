@@ -5,7 +5,7 @@ class BasicAuthPlugin extends MantisPlugin {
         $this->name        = 'BasicAuth Plugin';
         $this->description = 'Looks for REMOTE_USER in SERVER environment and autologins user. The username can be modified using $g_sso_user_regex in config for handling Kerberos auth and stripping domain (e.g. /^(.*)@DOMAIN\.LOCAL$/i).';
         $this->version     = '0.02';
-        $this->requires    = array( 'MantisCore' => '1.2.0, <= 1.3.0' );
+        $this->requires    = array( 'MantisCore' => '1.2.0, <= 1.3.1' );
         $this->author      = 'David Schmidt';
         $this->contact     = 'david.schmidt -at- univie.ac.at';
         $this->url         = '';
